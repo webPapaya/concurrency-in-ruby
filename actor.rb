@@ -1,6 +1,4 @@
 require 'thread'
-require 'pry'
-
 module Actor
   module ClassMethods
     def new(*)
