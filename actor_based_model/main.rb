@@ -43,7 +43,7 @@ class ImagesDownloaded
   end
 end
 
-images = Array.new(10) { |idx| "http://placehold.it/350x1#{idx*10}" }
+images = Array.new(10) { |idx| "http://placehold.it/350x1#{idx*100}" }
 ImageCollection.new.deliver :download, images
 
 sleep

@@ -13,5 +13,8 @@ class Fibonacci
   end
 end
 
-Fibonacci.new 4, 35
+Benchmark.bm do |x|
+  x.report { Fibonacci.new 4, 35 }
+end
+
 
