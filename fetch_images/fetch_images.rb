@@ -1,0 +1,53 @@
+require 'benchmark'
+require 'net/http'
+require './../futures/futures'
+require './../reactor/reactor'
+require './../actor_based_model/main'
+
+module FetchImages
+  def self.images
+    Array.new(20) { |idx| "http://placehold.it/350x1#{idx*100}" }
+  end
+
+  def self.iterative
+    self.images.each do |image_url|
+      uri = URI(image_url)
+      Net::HTTP.get(uri)
+    end
+  end
+
+  def self.futures
+    futures = self.images.map do |image_url|
+      Future.call do
+        uri = URI(image_url)
+        Net::HTTP.get(uri)
+      end
+    end
+    futures.each(&:value)
+  end
+
+  def self.reactor
+    EM.run do
+      ImageManager.new self.images
+    end
+  end
+
+  def self.actor_based_model
+    self.images.each do |image|
+      downloader = ImageDownload.new image
+      downloader.async.download
+      downloader
+    end
+    ActorPool.instance.shutdown
+  end
+end
+
+
+Benchmark.bm do |x|
+  x.report("Futures:   ") { FetchImages.futures }
+  x.report("Iterative: ") { FetchImages.iterative }
+  x.report("Reactor:   ") { FetchImages.reactor }
+  x.report("Actor:     ") { FetchImages.actor_based_model }
+end
+
+
