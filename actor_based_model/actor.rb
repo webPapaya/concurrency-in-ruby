@@ -14,8 +14,7 @@ class ActorPool
   end
 
   def shutdown
-    loop do
-      break if @queue.length == 0
+    until @queue.length == 0 do
       actor = @queue.pop
       actor.shutdown
     end
