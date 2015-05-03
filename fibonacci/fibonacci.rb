@@ -6,7 +6,6 @@ class Fibonacci
     @threads.each(&:join)
   end
 
-  #
   def calculate(number)
     return  number  if ( 0..1 ).include? number
     ( calculate( number - 1 ) + calculate( number - 2 ) )
