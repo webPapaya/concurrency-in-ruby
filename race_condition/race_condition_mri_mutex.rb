@@ -1,6 +1,12 @@
+# This is the solution to the problem from
+# example race_condition_mri.rb. This uses
+# a mutex so that only one thread can run
+# the code between mutex.lock and mutex.unlock
+# at any given time. Because of that the race
+# condition is gone.
+
 require 'thread'
 
-Queue
 $counter = 0
 mutex = Mutex.new
 
