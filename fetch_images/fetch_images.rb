@@ -44,9 +44,9 @@ module FetchImages
 end
 
 Benchmark.bm do |x|
-  # x.report("Iterative: ") { FetchImages.iterative }
-  # x.report("Futures:   ") { FetchImages.futures }
-  # x.report("Reactor:   ") { FetchImages.reactor }
+  x.report("Iterative: ") { FetchImages.iterative }
+  x.report("Futures:   ") { FetchImages.futures }
+  x.report("Reactor:   ") { FetchImages.reactor }
   x.report("Actor:     ") { FetchImages.actor_based_model }
 end
 
