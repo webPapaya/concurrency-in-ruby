@@ -1,3 +1,6 @@
+# This is the demo file which should compare
+# the Reactor Pattern, Futures and Actors.
+
 require 'benchmark'
 require 'net/http'
 
