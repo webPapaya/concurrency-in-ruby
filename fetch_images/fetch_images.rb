@@ -1,12 +1,13 @@
 require 'benchmark'
 require 'net/http'
-require './../futures/futures'
-require './../reactor/reactor'
-require './../actor_based_model/main'
+
+require_relative './../futures/futures'
+require_relative './../reactor/reactor'
+require_relative './../actor_based_model/main'
 
 module FetchImages
   def self.images
-    Array.new(20) { |idx| "http://placehold.it/350x1#{idx*100}" }
+    10.times.map { |idx| "http://placehold.it/350x1#{idx*100}" }
   end
 
   def self.iterative
@@ -28,7 +29,7 @@ module FetchImages
 
   def self.reactor
     EM.run do
-      ImageManager.new self.images
+      Reactor::ImageManager.new self.images
     end
   end
 
@@ -38,16 +39,14 @@ module FetchImages
       downloader.async.download
       downloader
     end
-    ActorPool.instance.shutdown
+    Actor::ActorPool.instance.shutdown
   end
 end
 
-
 Benchmark.bm do |x|
-  x.report("Futures:   ") { FetchImages.futures }
-  x.report("Iterative: ") { FetchImages.iterative }
-  x.report("Reactor:   ") { FetchImages.reactor }
+  # x.report("Iterative: ") { FetchImages.iterative }
+  # x.report("Futures:   ") { FetchImages.futures }
+  # x.report("Reactor:   ") { FetchImages.reactor }
   x.report("Actor:     ") { FetchImages.actor_based_model }
 end
-
 

@@ -2,25 +2,6 @@ require 'thread'
 require 'thwait'
 require 'singleton'
 
-class ActorPool
-  include Singleton
-
-  def initialize
-    @queue = Queue.new
-  end
-
-  def add(actor)
-    @queue.push actor
-  end
-
-  def shutdown
-    until @queue.length == 0 do
-      actor = @queue.pop
-      actor.shutdown
-    end
-  end
-end
-
 module Actor
   module ClassMethods
     def new(*)
@@ -86,4 +67,24 @@ module Actor
       @actor_proxy.deliver method, *args
     end
   end
+
+  class ActorPool
+    include Singleton
+
+    def initialize
+      @queue = Queue.new
+    end
+
+    def add(actor)
+      @queue.push actor
+    end
+
+    def shutdown
+      until @queue.length == 0 do
+        actor = @queue.pop
+        actor.shutdown
+      end
+    end
+  end
+  
 end
